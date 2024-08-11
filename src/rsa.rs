@@ -1,5 +1,5 @@
 use num_bigint::{BigUint, ToBigUint};
-use num_primes::Generator;
+use num_primes::{Generator, Verification};
 use num_traits::{One, ToPrimitive};
 use crate::utils::mod_inv;
 
@@ -12,11 +12,17 @@ pub struct RSA {
 
 impl RSA {
     pub fn new() -> Self {
-        let p = Generator::new_prime(256);
+        let p = Generator::new_prime(1024);
         let p_c = BigUint::from_bytes_be(&p.clone().to_bytes_be());
-        let q = Generator::new_prime(256);
+        let q = Generator::new_prime(1024);
         let q_c = BigUint::from_bytes_be(&q.clone().to_bytes_be());
 
+        let is_prime = Verification::is_prime(&p);
+        assert_eq!(is_prime, true);
+        // assert_eq!(is_safe_prime, true);
+        let is_prime = Verification::is_prime(&q);
+        assert_eq!(is_prime, true);
+        // assert_eq!(is_safe_prime, true);
 
         let n = p*q;
         let phi = (p_c - BigUint::one())*(q_c - BigUint::one());
